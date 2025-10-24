@@ -7,6 +7,9 @@ namespace Portfolio.Models
 {
     public class ProfileDetail
     {
+        [BsonId]
+        [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
+        public int Id { get; set; }
         [BsonRequired]
         [BsonElement("Full_Name")]
         public string Name { get; set; }
@@ -42,6 +45,7 @@ namespace Portfolio.Models
         [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         [BsonRequired]
         [BsonElement("Profile_Updated_At")]
-        public DateTime ResumeUpdatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        
     }
 }

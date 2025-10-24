@@ -1,4 +1,6 @@
-﻿using Portfolio.Interfaces.IRepository_s;
+﻿using MongoDB.Driver;
+using Portfolio.Data;
+using Portfolio.Interfaces.IRepository_s;
 using Portfolio.Models;
 
 namespace Portfolio.Repositories
@@ -7,25 +9,28 @@ namespace Portfolio.Repositories
     public class ProfileRepository : IProfileRepository
     {
         private readonly ILogger<ProfileRepository> _logger;
-        private readonly IConfiguration _configuration;
-        public ProfileRepository(ILogger<ProfileRepository> logger, IConfiguration configuration)
+        private readonly IMongoCollection<ProfileDetail> _profileCollection;
+        public ProfileRepository(ILogger<ProfileRepository> logger, MongoDbContext context)
         {
             _logger = logger;
-            _configuration = configuration;
+            _profileCollection=context.GetCollecgtion<ProfileDetail>("ProfileDetails");
+
         }
-        public Task AddProfileAsync(ProfileDetail profileDetail)
+        public async Task AddProfileAsync(ProfileDetail profileDetail)
         {
-            throw new NotImplementedException();
+           await _profileCollection.InsertOneAsync(profileDetail);
         }
 
-        public Task<ProfileDetail> GetProfileDetailsAsync()
+        public async Task<ProfileDetail> GetProfileDetailsAsync()
         {
-            throw new NotImplementedException();
+            return await _profileCollection.Find(_ => true).FirstOrDefaultAsync();
         }
 
-        public Task<ProfileDetail> UpdateProfileDetailsAsync(ProfileDetail profileDetail)
+        public async Task UpdateProfileDetailsAsync(ProfileDetail profileDetail,string email)
         {
-            throw new NotImplementedException();
+            profileDetail.ResumeUpdatedAt=DateTime.Now;
+            await _profileCollection.ReplaceOneAsync(p => p.Email==email,profileDetail);
         }
+        
     }
 }

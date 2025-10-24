@@ -5,7 +5,7 @@ namespace Portfolio.Interfaces.IRepository_s
     public interface IProfileRepository
     {
         public Task<ProfileDetail> GetProfileDetailsAsync();
-        public Task<ProfileDetail> UpdateProfileDetailsAsync(ProfileDetail profileDetail);
+        public Task UpdateProfileDetailsAsync(ProfileDetail profileDetail,string email);
         public Task AddProfileAsync(ProfileDetail profileDetail);
 
     }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using Portfolio.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -17,6 +18,9 @@ builder.Services.AddSwaggerGen(options =>
         Description="use this end points for handeling the content of the websites"
     });
 });
+builder.Services.Configure<MongoDbSettings>(
+    builder.Configuration.GetSection("ConnectionStr"));
+builder.Services.AddSingleton<MongoDbContext>();
 builder.Services.AddAuthentication(
     options =>
     {
