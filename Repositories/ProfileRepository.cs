@@ -18,19 +18,54 @@ namespace Portfolio.Repositories
         }
         public async Task AddProfileAsync(ProfileDetail profileDetail)
         {
-           await _profileCollection.InsertOneAsync(profileDetail);
+            try
+            {
+                await _profileCollection.InsertOneAsync(profileDetail);
+            }catch(Exception ex)
+            {
+                _logger.LogError($"Error adding profile: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<ProfileDetail> GetProfileDetailByEmailIdAsync(string emailId)
+        {
+            try
+            {
+                return await _profileCollection.Find(profile => profile.Email == emailId).FirstOrDefaultAsync();
+            }catch(Exception ex)
+            {
+                _logger.LogError($"Error retrieving profile details: {ex.Message}");
+                throw;
+            }
         }
 
         public async Task<ProfileDetail> GetProfileDetailsAsync()
         {
-            return await _profileCollection.Find(_ => true).FirstOrDefaultAsync();
+            try
+            {
+                return await _profileCollection.Find(_ => true).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error retrieving profile details: {ex.Message}");
+                throw;
+            }
         }
 
-        public async Task UpdateProfileDetailsAsync(ProfileDetail profileDetail,string email)
+        public async Task UpdateProfileDetailsAsync(ProfileDetail profileDetail, string email)
         {
-            profileDetail.ResumeUpdatedAt=DateTime.Now;
-            await _profileCollection.ReplaceOneAsync(p => p.Email==email,profileDetail);
+            try
+            {
+                profileDetail.UpdatedAt = DateTime.Now;
+                await _profileCollection.ReplaceOneAsync(p => p.Email == email, profileDetail);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error updating profile details: {ex.Message}");
+                throw;
+            }
         }
-        
+               
     }
 }

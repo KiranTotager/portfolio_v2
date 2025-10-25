@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Portfolio.Data;
+using Portfolio.Interfaces.IRepository_s;
+using Portfolio.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -33,6 +35,8 @@ builder.Services.AddAuthentication(
 
     }
     );
+//registering services
+builder.Services.AddScoped<IProfileRepository,ProfileRepository>();
 
 //builder.Services.us
 var app = builder.Build();
@@ -44,7 +48,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
+app.UseStaticFiles();
 app.UseAuthorization();
 
 app.MapControllers();
