@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Portfolio.Data;
 using Portfolio.Interfaces.IRepository_s;
+using Portfolio.Interfaces.IServices;
 using Portfolio.Repositories;
+using Portfolio.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -37,7 +39,7 @@ builder.Services.AddAuthentication(
     );
 //registering services
 builder.Services.AddScoped<IProfileRepository,ProfileRepository>();
-
+builder.Services.AddScoped<IProfileService, ProfileService>();
 //builder.Services.us
 var app = builder.Build();
 

@@ -3,7 +3,7 @@ using Portfolio.Enums;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 
-namespace Portfolio.Dto
+namespace Portfolio.Dto.RequestDto
 {
     public class ProfileRequestDto
     {
@@ -28,7 +28,7 @@ namespace Portfolio.Dto
         public AvailabilityToWorkStatus ProfileHolderAvailabilityToWorkStatus { get; set; }
         [Required]
         [SwaggerSchema(Description = "please provide the image of the user,this will be displayed on landing page")]
-        public IFormFile FormFile { get; set; }
+        public IFormFile ProfileImage { get; set; }
         [Required]
         [SwaggerSchema(Description = "please provide the Resume of the user,this will be displayed on landing page")]
         public IFormFile ResumeFile { get; set; }
