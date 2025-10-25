@@ -47,7 +47,7 @@ namespace Portfolio.Repositories
                 return await _profileCollection.Find(_ => true).FirstOrDefaultAsync();
             }
             catch (Exception ex)
-            {
+        {
                 _logger.LogError($"Error retrieving profile details: {ex.Message}");
                 throw;
             }
@@ -61,7 +61,7 @@ namespace Portfolio.Repositories
                 await _profileCollection.ReplaceOneAsync(p => p.Email == email, profileDetail);
             }
             catch (Exception ex)
-            {
+        {
                 _logger.LogError($"Error updating profile details: {ex.Message}");
                 throw;
             }

@@ -5,7 +5,7 @@ namespace Portfolio.Validators
 {
     public class FileValidator
     {
-        public static bool isFileExensionAllowed(IFormFile file,List<string> allowedExtensios)
+        public static bool isFileExensionAllowed(IFormFile file,string[] allowedExtensios)
         {
             var extension=Path.GetExtension(file.FileName).ToLowerInvariant();
             return allowedExtensios.Contains(extension);

@@ -1,4 +1,5 @@
-﻿using Portfolio.Dto;
+﻿using Portfolio.Dto.RequestDto;
+using Portfolio.Dto.ResponseDto;
 using Portfolio.Interfaces.IRepository_s;
 using Portfolio.Interfaces.IServices;
 using Portfolio.Models;
@@ -25,6 +26,9 @@ namespace Portfolio.Services
                 UpdatedAt=DateTime.Now,
                 Address=profileRequestDto.ProfileHolderAddress,
             };
+            string FileName=$"{Guid.NewGuid()}_{profileRequestDto.ProfileImage.FileName}";
+            string ResumeFileName=$"{Guid.NewGuid()}_{profileRequestDto.ResumeFile.FileName}";
+            var ProfileImagePath=Path.Combine("wwwRoot","ProfileImages",FileName);
             await _profileRepository.AddProfileAsync(profileDetail);
         }
 
@@ -33,9 +37,22 @@ namespace Portfolio.Services
             // to be implemented
         }
 
-        public async Task<ProfileDetail> GetProfileDetailsAsync()
+        public async Task<ProfileResponseDto> GetProfileDetailsAsync()
         {
-            return await _profileRepository.GetProfileDetailsAsync();
+            ProfileDetail profileDetail= await _profileRepository.GetProfileDetailsAsync();
+            return new ProfileResponseDto
+            {
+                ProfileHolderName=profileDetail.Name,
+                ProfileHolderCurrentDesignation=profileDetail.CurrentDesignation,
+                ProfileHolderEmail=profileDetail.Email,
+                ProfileHolderPhoneNumber=profileDetail.PhoneNumber,
+                ProfileHolderAvailabilityToWorkStatus=profileDetail.AvailabilityToWorkStatus,
+                ProfileHolderShortDescription=profileDetail.ShortDescription,
+                ProfileHolderLongDescription=profileDetail.LongDescription,
+                ProfileHolderAddress=profileDetail.Address,
+                ProfileImageUrl=profileDetail.ProfilePicUrl,
+                ResumeFileUrl=profileDetail.ResumeUrl,
+            };
         }
 
         public async Task UpdateProfileDetailsAsync(ProfileRequestDto profileRequestDto, string email)
