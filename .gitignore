@@ -1,9 +1,2 @@
-
-﻿*.vs
-bin/
-obj/
-*.user
-
-﻿.vs/
-bin
 .vs
+bin
