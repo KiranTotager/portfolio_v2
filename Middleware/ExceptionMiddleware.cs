@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
+using Portfolio.CustomExceptions;
 
 namespace Portfolio.Middleware
 {
@@ -18,7 +19,14 @@ namespace Portfolio.Middleware
                         string message = "Internal Server Error";
                         switch (ExceptionFeature.Error)
                         {
-
+                            case NotFoundException notFoundException:
+                                statusCode = StatusCodes.Status404NotFound;
+                                message=notFoundException.Message;
+                                break;
+                            case DuplicateException duplicateException:
+                                statusCode = StatusCodes.Status409Conflict;
+                                message=duplicateException.Message;
+                                break;
                         }
                     }
 

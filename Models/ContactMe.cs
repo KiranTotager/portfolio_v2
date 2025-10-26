@@ -7,7 +7,7 @@ namespace Portfolio.Models
     {
         [BsonId]
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-        public long Id { get; set; }
+        public string Id { get; set; }
         [BsonRequired]
         [BsonElement("Requested_Person_Name")]
         public string Name { get; set; }

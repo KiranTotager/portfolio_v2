@@ -9,6 +9,12 @@ namespace Portfolio.Services
     public class ProfileService : IProfileService
     {
         private readonly IProfileRepository _profileRepository;
+        private readonly ILogger<ProfileService> _logger;
+        public ProfileService(IProfileRepository profileRepository,ILogger<ProfileService> logger)
+        {
+            _profileRepository = profileRepository;
+            _logger = logger;
+        }
 
         public async Task CreateProfileAsync(ProfileRequestDto profileRequestDto)
         {
@@ -28,13 +34,28 @@ namespace Portfolio.Services
             };
             try
             {
-                string FileName = $"{Guid.NewGuid()}_{profileRequestDto.ProfileImage.FileName}";
-                string ResumeFileName = $"{Guid.NewGuid()}_{profileRequestDto.ResumeFile.FileName}";
-                var ProfileImagePath = Path.Combine("wwwRoot", "ProfileImages", FileName);
+               if(profileRequestDto.ProfileImage!=null)
+               {
+                    string FileName = $"{Guid.NewGuid()}_{profileRequestDto.ProfileImage.FileName}";
+                    string ResumeFileName = $"{Guid.NewGuid()}_{profileRequestDto.ResumeFile.FileName}";
+                    var ProfileImagePath = Path.Combine("wwwRoot", "ProfileImages", FileName);
+                    var ResumeFilePath=Path.Combine("wwwRoot","ResumeFiles", ResumeFileName);
+                    using (var stream = new FileStream(ProfileImagePath, FileMode.Create))
+                    {
+                        await profileRequestDto.ProfileImage.CopyToAsync(stream);
+                    }
+                    using(var stream=new FileStream(ResumeFilePath, FileMode.Create))
+                    {
+                        await profileRequestDto.ResumeFile.CopyToAsync(stream);
+                    }
+                    profileDetail.ProfilePicUrl="/ProfileImages/" + FileName;
+                    profileDetail.ResumeUrl="/ResumeFiles/" + ResumeFileName;
+                }
 
             }
             catch(Exception ex)
             {
+                _logger.LogError($"Error in uploading files: {ex.Message}");
             }
             await _profileRepository.AddProfileAsync(profileDetail);
         }

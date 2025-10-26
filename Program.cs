@@ -61,7 +61,8 @@ builder.Services.AddAuthentication(
 //registering services
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
-
+builder.Services.AddScoped<IAuthService,AuthService>();
+builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
 
 //builder.Services.us
 var app = builder.Build();
