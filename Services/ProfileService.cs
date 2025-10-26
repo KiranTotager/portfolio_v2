@@ -26,9 +26,16 @@ namespace Portfolio.Services
                 UpdatedAt=DateTime.Now,
                 Address=profileRequestDto.ProfileHolderAddress,
             };
-            string FileName=$"{Guid.NewGuid()}_{profileRequestDto.ProfileImage.FileName}";
-            string ResumeFileName=$"{Guid.NewGuid()}_{profileRequestDto.ResumeFile.FileName}";
-            var ProfileImagePath=Path.Combine("wwwRoot","ProfileImages",FileName);
+            try
+            {
+                string FileName = $"{Guid.NewGuid()}_{profileRequestDto.ProfileImage.FileName}";
+                string ResumeFileName = $"{Guid.NewGuid()}_{profileRequestDto.ResumeFile.FileName}";
+                var ProfileImagePath = Path.Combine("wwwRoot", "ProfileImages", FileName);
+
+            }
+            catch(Exception ex)
+            {
+            }
             await _profileRepository.AddProfileAsync(profileDetail);
         }
 

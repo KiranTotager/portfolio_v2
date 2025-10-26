@@ -12,7 +12,7 @@ namespace Portfolio.Controllers
 {
     [ApiController]
     [ApiVersion("1.0")]
-    [ApiExplorerSettings(GroupName = "profile")]
+    [ApiExplorerSettings(GroupName = "CMS")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
