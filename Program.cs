@@ -21,6 +21,7 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    options.EnableAnnotations();
     options.SwaggerDoc("CMS", new OpenApiInfo
     {
         Title = "Portfolio CMS",
@@ -28,7 +29,7 @@ builder.Services.AddSwaggerGen(options =>
         Description = "use this end points for handeling the content of the websites"
     });
     options.EnableAnnotations();
-});
+    });
 builder.Services.AddApiVersioning(options =>
 {
     options.AssumeDefaultVersionWhenUnspecified = true;
@@ -41,7 +42,7 @@ builder.Services.AddApiVersioning(options =>
     {
         options.GroupNameFormat = "'v'VVV";
         options.SubstituteApiVersionInUrl = true;
-    });
+});
 
 builder.Services.Configure<MongoDbSettings>(
     builder.Configuration.GetSection("ConnectionStr"));
@@ -51,7 +52,7 @@ builder.Services.AddAuthentication(
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    }
+    }    
     ).AddJwtBearer(
     options =>
     {
