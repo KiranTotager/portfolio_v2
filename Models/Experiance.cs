@@ -1,28 +1,22 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Portfolio.Models
 {
     public class Experiance
     {
-        [BsonId]
-        [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-        public string Id { get; set; }
-        [BsonElement("Company_name")]
-        [BsonRequired]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        [Required] 
         public string CompanyName { get; set; }
-        [BsonElement("Worked_Designation")]
-        [BsonRequired]
+        [Required]
         public string Designation { get; set; }
-        [BsonElement("Worked_for_Duration")]
-        [BsonRequired]
+        [Required]
         public string Duration { get; set; }
-        [BsonElement("Started_From")]
-        [BsonDateTimeOptions(Kind =DateTimeKind.Local)]
-        [BsonRequired]
+        [Required]
         public DateTime StartedFrom { get; set; }
-        [BsonElement("Worked_Till")]
-        [BsonDateTimeOptions(Kind =DateTimeKind.Local)]
-        [BsonRequired]
-        public DateTime WorkedTill { get; set; }
+        public DateTime? WorkedTill { get; set; }
+        public string CompanyImageUrl { get; set; }
     }
 }

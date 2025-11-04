@@ -1,5 +1,4 @@
-﻿using MongoDB.Driver;
-using Portfolio.Data;
+﻿using Portfolio.Data;
 using Portfolio.Interfaces.IRepository_s;
 using Portfolio.Models;
 
@@ -9,18 +8,15 @@ namespace Portfolio.Repositories
     public class ProfileRepository : IProfileRepository
     {
         private readonly ILogger<ProfileRepository> _logger;
-        private readonly IMongoCollection<ProfileDetail> _profileCollection;
         public ProfileRepository(ILogger<ProfileRepository> logger, MongoDbContext context)
         {
             _logger = logger;
-            _profileCollection=context.GetCollecgtion<ProfileDetail>("ProfileDetails");
 
         }
         public async Task AddProfileAsync(ProfileDetail profileDetail)
         {
             try
             {
-                await _profileCollection.InsertOneAsync(profileDetail);
             }catch(Exception ex)
             {
                 _logger.LogError($"Error adding profile: {ex.Message}");
@@ -32,7 +28,7 @@ namespace Portfolio.Repositories
         {
             try
             {
-                return await _profileCollection.Find(profile => profile.Email == emailId).FirstOrDefaultAsync();
+                return null;
             }catch(Exception ex)
             {
                 _logger.LogError($"Error retrieving profile details: {ex.Message}");
@@ -44,7 +40,7 @@ namespace Portfolio.Repositories
         {
             try
             {
-                return await _profileCollection.Find(_ => true).FirstOrDefaultAsync();
+                return null;
             }
             catch (Exception ex)
         {
@@ -58,7 +54,6 @@ namespace Portfolio.Repositories
             try
             {
                 profileDetail.UpdatedAt = DateTime.Now;
-                await _profileCollection.ReplaceOneAsync(p => p.Email == email, profileDetail);
             }
             catch (Exception ex)
         {

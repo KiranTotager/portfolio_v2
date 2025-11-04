@@ -13,6 +13,12 @@ namespace Portfolio.Utils
     {
         private readonly IConfiguration _configuration;
         private readonly ILogger<TokenService> _logger;
+        public TokenService(IConfiguration configuration, ILogger<TokenService> logger)
+        {
+            _configuration = configuration;
+            _logger = logger;
+        }
+
         public string GenerateAuthToken(ApplicationUser applicationUser)
         {
             var Role = applicationUser.Role;

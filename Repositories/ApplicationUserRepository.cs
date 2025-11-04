@@ -1,5 +1,4 @@
-﻿using MongoDB.Driver;
-using Portfolio.CustomExceptions;
+﻿using Portfolio.CustomExceptions;
 using Portfolio.Data;
 using Portfolio.Interfaces.IRepository_s;
 using Portfolio.Models;
@@ -9,17 +8,14 @@ namespace Portfolio.Repositories
     public class ApplicationUserRepository : IApplicationUserRepository
     {
         private readonly ILogger<ApplicationUserRepository> _logger;
-        private readonly IMongoCollection<ApplicationUser> _users;
         public ApplicationUserRepository(ILogger<ApplicationUserRepository> logger,MongoDbContext context)
         {
             _logger = logger;
-            _users=context.GetCollecgtion<ApplicationUser>("ApplicationUsers");
         }
         public async Task AddApplicationUserAsync(ApplicationUser applicationUser)
         {
             try
             {
-                await _users.InsertOneAsync(applicationUser);
             }
             catch (Exception ex)
             {
@@ -37,7 +33,7 @@ namespace Portfolio.Repositories
         {
             try
             {
-                return _users.Find(_ => true).ToListAsync();
+                return null;
             }
             catch(Exception ex)
             {
@@ -50,7 +46,7 @@ namespace Portfolio.Repositories
         {
             try
             {
-                return await _users.Find(user=>user.EmailId==email).FirstOrDefaultAsync() ?? throw new NotFoundException($"user with email id {email}");
+                return null;
             }
             catch(Exception ex)
             {
@@ -63,7 +59,6 @@ namespace Portfolio.Repositories
         {
             try
             {
-                await _users.ReplaceOneAsync(user => user.EmailId == email, applicationUser);
             }
             catch(Exception ex)
             {

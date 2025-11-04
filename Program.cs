@@ -1,12 +1,16 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
 using Portfolio.Data;
 using Portfolio.Interfaces.IRepository_s;
 using Portfolio.Interfaces.IServices;
+using Portfolio.Interfaces.IUtils;
 using Portfolio.Repositories;
 using Portfolio.Services;
+using Portfolio.Utils;
+using System.Text;
 using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,12 +32,40 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1",
         Description = "use this end points for handeling the content of the websites"
     });
-    options.EnableAnnotations();
+    options.SwaggerDoc("Authentication", new OpenApiInfo
+    {
+        Title = "Portfolio Authentication",
+        Version = "v1",
+        Description = "use this end points for handeling the authentication of the websites"
     });
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Type = SecuritySchemeType.ApiKey,
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Scheme = "bearer",
+
+        Description = "Jwt authorization using bearer scheme"
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference=new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+        Array.Empty<string>()
+        },
+    });
+});
 builder.Services.AddApiVersioning(options =>
 {
     options.AssumeDefaultVersionWhenUnspecified = true;
-    options.DefaultApiVersion = new ApiVersion(1,0);
+    options.DefaultApiVersion = new ApiVersion(1, 0);
     options.ReportApiVersions = true;
 }
     ).AddMvc()
@@ -42,7 +74,7 @@ builder.Services.AddApiVersioning(options =>
     {
         options.GroupNameFormat = "'v'VVV";
         options.SubstituteApiVersionInUrl = true;
-});
+    });
 
 builder.Services.Configure<MongoDbSettings>(
     builder.Configuration.GetSection("ConnectionStr"));
@@ -52,19 +84,38 @@ builder.Services.AddAuthentication(
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    }    
+    }
     ).AddJwtBearer(
     options =>
     {
 
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]))
+        };
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = context =>
+            {
+                return Task.CompletedTask;
+            }
+        };
     }
     );
 //registering services
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
-builder.Services.AddScoped<IAuthService,AuthService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
-
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 //builder.Services.us
 var app = builder.Build();
 
@@ -80,14 +131,17 @@ if (app.Environment.IsDevelopment())
         c =>
         {
             c.SwaggerEndpoint("/swagger/CMS/swagger.json", "CMS");
+            c.SwaggerEndpoint("/swagger/Authentication/swagger.json", "Authentication");
+            c.InjectStylesheet("/SwaggerCustom/SwaggerCustom.css");
+            c.InjectJavascript("/SwaggerCustom/SwaggerCustom.js");
         }
         );
 }
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseStaticFiles();
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

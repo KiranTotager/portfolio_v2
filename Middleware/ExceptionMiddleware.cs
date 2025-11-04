@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Portfolio.CustomExceptions;
+using Portfolio.Dto.ResponseDto;
+using System.Text.Json;
 
 namespace Portfolio.Middleware
 {
@@ -21,13 +23,19 @@ namespace Portfolio.Middleware
                         {
                             case NotFoundException notFoundException:
                                 statusCode = StatusCodes.Status404NotFound;
-                                message=notFoundException.Message;
+                                message = notFoundException.Message;
                                 break;
                             case DuplicateException duplicateException:
                                 statusCode = StatusCodes.Status409Conflict;
-                                message=duplicateException.Message;
+                                message = duplicateException.Message;
+                                break;
+                            case UnauthorizedAccessException unauthorizedAccessException:
+                                statusCode = StatusCodes.Status401Unauthorized;
+                                message = unauthorizedAccessException.Message;
                                 break;
                         }
+                        context.Response.StatusCode = statusCode;
+                        await context.Response.WriteAsync(JsonSerializer.Serialize(new CommonResponse<Object>(statusCode, message)));
                     }
 
                 });

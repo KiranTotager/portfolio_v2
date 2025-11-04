@@ -1,24 +1,21 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using Portfolio.Enums;
+﻿using Portfolio.Enums;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Portfolio.Models
 {
     public class ApplicationUser
     {
-        [BsonId]
-        [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-        public string Id { get; set; }
-        [BsonRequired]
-        [BsonElement("User_Name")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        [Required]
+        [MaxLength(100)]
         public string UserName { get; set; }
-        [BsonRequired]
-        [BsonElement("Email_Id")]
+        [Required]
+        [MaxLength(100)]
         public string EmailId { get; set; }
-        [BsonRequired]
-        [BsonElement("Hashed_Password")]
+        [Required]
+
         public string HashedPassword { get; set; }
-        [BsonRequired]
-        [BsonElement("Role")]
-        public ApplicationUserRoles Role { get; set; }
     }
 }
