@@ -33,10 +33,10 @@ namespace Portfolio.Services
             {
                 throw new NotFoundException($"user with the email {loginRequestDto.EmailId}");
             }
-            else if (!BCrypt.Net.BCrypt.Verify(loginRequestDto.Password, AppUser.HashedPassword))
-            {
-                throw new UnauthorizedAccessException("incorrect password");
-            }
+            //else if (!BCrypt.Net.BCrypt.Verify(loginRequestDto.Password, AppUser.HashedPassword))
+            //{
+            //    throw new UnauthorizedAccessException("incorrect password");
+            //}
             int RefTokenExpiryTime = _configuration.GetValue<int>("Jwt:RefreshTokenExpiryTime");
             string AuthenticationToken = _tokenService.GenerateAuthToken(AppUser);
             string RefToken = _tokenService.GenerateRefreshToken();
@@ -61,10 +61,10 @@ namespace Portfolio.Services
             }
             ApplicationUser NewAppUser = new ApplicationUser
             {
-                EmailId = applicationUserRequestDto.EmailID,
+                //EmailId = applicationUserRequestDto.EmailID,
                 UserName = applicationUserRequestDto.UserName,
-                HashedPassword = BCrypt.Net.BCrypt.HashPassword(applicationUserRequestDto.Password),
-                Role = applicationUserRequestDto.Role
+                //HashedPassword = BCrypt.Net.BCrypt.HashPassword(applicationUserRequestDto.Password),
+                //Role = applicationUserRequestDto.Role
             };
             await _applicationUserRepository.AddApplicationUserAsync(NewAppUser);
         }

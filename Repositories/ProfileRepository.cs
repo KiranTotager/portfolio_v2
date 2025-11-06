@@ -8,7 +8,7 @@ namespace Portfolio.Repositories
     public class ProfileRepository : IProfileRepository
     {
         private readonly ILogger<ProfileRepository> _logger;
-        public ProfileRepository(ILogger<ProfileRepository> logger, MongoDbContext context)
+        public ProfileRepository(ILogger<ProfileRepository> logger)
         {
             _logger = logger;
 

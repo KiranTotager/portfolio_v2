@@ -7,7 +7,7 @@ namespace Portfolio.Repositories
     public class RefreshTokenRepository : IRefreshTokenRepository
     {
         private readonly ILogger<RefreshTokenRepository> _logger;
-        public RefreshTokenRepository(MongoDbContext context, ILogger<RefreshTokenRepository> logger)
+        public RefreshTokenRepository(ILogger<RefreshTokenRepository> logger)
         {
             _logger = logger;
         }

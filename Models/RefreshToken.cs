@@ -1,20 +1,22 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Portfolio.Models
 {
     public class RefreshToken
     {
-        [Required]
+        public long Id { get; set; }
+        [Required(ErrorMessage ="User id is required")]
         public string UserId { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Token is required")]
         public string Token { get; set; }
-        [Required]
+        [Required(ErrorMessage = "ExpiryTime is required")]
         public DateTime ExpiryTime { get; set; }
-        [Required]
+        [Required(ErrorMessage = "DeviceInfo is required")]
         public  string DeviceInfo { get; set; }
-        [Required]
+        [Required(ErrorMessage = "DeviceIp is required")]
         public string DeviceIp { get; set; }
-        [Required]
+        [Required(ErrorMessage = "IsRevoked is required")]
         public bool IsRevoked { get; set; }
     }
 }

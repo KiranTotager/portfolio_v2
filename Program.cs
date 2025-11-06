@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
@@ -37,6 +38,12 @@ builder.Services.AddSwaggerGen(options =>
         Title = "Portfolio Authentication",
         Version = "v1",
         Description = "use this end points for handeling the authentication of the websites"
+    });
+    options.SwaggerDoc("Client", new OpenApiInfo
+    {
+        Title = "Cleint api's",
+        Version = "v1",
+        Description = "use this end call to get details for clients"
     });
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -76,9 +83,11 @@ builder.Services.AddApiVersioning(options =>
         options.SubstituteApiVersionInUrl = true;
     });
 
-builder.Services.Configure<MongoDbSettings>(
-    builder.Configuration.GetSection("ConnectionStr"));
-builder.Services.AddSingleton<MongoDbContext>();
+//builder.Services.Configure<MongoDbSettings>(
+//    builder.Configuration.GetSection("ConnectionStr"));
+//builder.Services.AddSingleton<MongoDbContext>();
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresSqlConnectionString")));
 builder.Services.AddAuthentication(
     options =>
     {
@@ -116,6 +125,8 @@ builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+builder.Services.AddScoped<ILandingPageRepository,LandingPageDetailRepository>();
+builder.Services.AddScoped<ILandingPageDetailsService, LandingPageDetailService>();
 //builder.Services.us
 var app = builder.Build();
 
@@ -132,6 +143,7 @@ if (app.Environment.IsDevelopment())
         {
             c.SwaggerEndpoint("/swagger/CMS/swagger.json", "CMS");
             c.SwaggerEndpoint("/swagger/Authentication/swagger.json", "Authentication");
+            c.SwaggerEndpoint("/swagger/Client/swagger.json", "Client");
             c.InjectStylesheet("/SwaggerCustom/SwaggerCustom.css");
             c.InjectJavascript("/SwaggerCustom/SwaggerCustom.js");
         }

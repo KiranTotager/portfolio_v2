@@ -21,14 +21,14 @@ namespace Portfolio.Utils
 
         public string GenerateAuthToken(ApplicationUser applicationUser)
         {
-            var Role = applicationUser.Role;
+            //var Role = applicationUser.Role;
             int ExpiryTime = _configuration.GetValue<int>("Jwt:AuthTokenExpiryTime");
             var SecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetValue<string>("Jwt:SecretKey")));
             var Credentials = new SigningCredentials(SecurityKey, SecurityAlgorithms.HmacSha256);
             var userClaims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier,applicationUser.Id),
-                new Claim(ClaimTypes.Role,applicationUser.Role.ToString()),
+                //new Claim(ClaimTypes.Role,applicationUser.Role.ToString()),
             };
             var Token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],

@@ -1,4 +1,5 @@
-﻿using Portfolio.CustomExceptions;
+﻿using Microsoft.EntityFrameworkCore;
+using Portfolio.CustomExceptions;
 using Portfolio.Data;
 using Portfolio.Interfaces.IRepository_s;
 using Portfolio.Models;
@@ -8,14 +9,17 @@ namespace Portfolio.Repositories
     public class ApplicationUserRepository : IApplicationUserRepository
     {
         private readonly ILogger<ApplicationUserRepository> _logger;
-        public ApplicationUserRepository(ILogger<ApplicationUserRepository> logger,MongoDbContext context)
+        private readonly ApplicationDbContext _context;
+        public ApplicationUserRepository(ILogger<ApplicationUserRepository> logger, ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
         public async Task AddApplicationUserAsync(ApplicationUser applicationUser)
         {
             try
             {
+                await _context.AddAsync(applicationUser);
             }
             catch (Exception ex)
             {
@@ -29,10 +33,11 @@ namespace Portfolio.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<List<ApplicationUser>> GetAllApplicationUsersAsync()
+        public async Task<List<ApplicationUser>> GetAllApplicationUsersAsync()
         {
             try
             {
+                //return await _context.Users.ToListAsync();
                 return null;
             }
             catch(Exception ex)
