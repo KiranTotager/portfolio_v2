@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
@@ -8,6 +9,8 @@ using Portfolio.Data;
 using Portfolio.Interfaces.IRepository_s;
 using Portfolio.Interfaces.IServices;
 using Portfolio.Interfaces.IUtils;
+using Portfolio.Middleware;
+using Portfolio.Models;
 using Portfolio.Repositories;
 using Portfolio.Services;
 using Portfolio.Utils;
@@ -88,6 +91,8 @@ builder.Services.AddApiVersioning(options =>
 //builder.Services.AddSingleton<MongoDbContext>();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresSqlConnectionString")));
+builder.Services.AddIdentity<ApplicationUser,IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddAuthentication(
     options =>
     {
@@ -150,6 +155,7 @@ if (app.Environment.IsDevelopment())
         );
 }
 app.UseHttpsRedirection();
+app.UseExceptionMiddleWare();
 app.UseAuthentication();
 app.UseStaticFiles();
 app.UseAuthentication();

@@ -32,7 +32,7 @@ namespace Portfolio.Controllers
         [SwaggerOperation("use this end call to add the landing page details")]
         public async Task<ActionResult<CommonResponse<Object>>> AddLandingPageDetailsAsync([FromBody] LandingPageDetailDto landingPageDetailDto)
         {
-            await _landingPageDetailsService.UpdateLandingPageDetailsAsync(landingPageDetailDto);
+            await _landingPageDetailsService.SaveLandingPageDetailsAsync(landingPageDetailDto);
             return Ok(new CommonResponse<Object>(StatusCodes.Status201Created, "Landing Page detail added successfully"));
         }
         [ApiExplorerSettings(GroupName = "CMS")]

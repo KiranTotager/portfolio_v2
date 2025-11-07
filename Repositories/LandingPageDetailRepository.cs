@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Portfolio.CustomExceptions;
 using Portfolio.Data;
 using Portfolio.Interfaces.IRepository_s;
 using Portfolio.Models;
@@ -32,7 +33,7 @@ namespace Portfolio.Repositories
         {
             try
             {
-                await _context.Database.ExecuteSqlRawAsync("Truncate Table LandingPageDetails");
+                await _context.Database.ExecuteSqlRawAsync(@"Truncate Table ""LandingPageDetails""");
             }
             catch (Exception ex)
             {

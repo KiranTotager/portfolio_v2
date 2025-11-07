@@ -1,4 +1,5 @@
-﻿using Portfolio.Dto.RequestDto;
+﻿using Portfolio.CustomExceptions;
+using Portfolio.Dto.RequestDto;
 using Portfolio.Interfaces.IRepository_s;
 using Portfolio.Interfaces.IServices;
 using Portfolio.Models;
@@ -18,9 +19,9 @@ namespace Portfolio.Services
             LandingPageDetails LPageDetails= await _repository.GetLandingPageDetailsAsync();
             return new LandingPageDetailDto
             {
-                HelloMessage = LPageDetails.HelloMessage,
-                PassionMessage = LPageDetails.PassionMessage,
-                ShortDescription = LPageDetails.ShortDescription,
+                HelloMessage = LPageDetails?.HelloMessage,
+                PassionMessage = LPageDetails?.PassionMessage,
+                ShortDescription = LPageDetails?.ShortDescription,
             };
         }
 
@@ -39,6 +40,10 @@ namespace Portfolio.Services
         public async Task UpdateLandingPageDetailsAsync(LandingPageDetailDto landingPageDetailRequestDto)
         {
             LandingPageDetails LPageDetails =await _repository.GetLandingPageDetailsAsync();
+            if(LPageDetails==null)
+            {
+                throw new NotFoundException("landing page details");
+            }
             LPageDetails.HelloMessage=landingPageDetailRequestDto.HelloMessage;
             LPageDetails.PassionMessage = landingPageDetailRequestDto.PassionMessage;
             LPageDetails.ShortDescription=landingPageDetailRequestDto.ShortDescription;

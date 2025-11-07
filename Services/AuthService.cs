@@ -1,4 +1,5 @@
-﻿using Portfolio.CustomExceptions;
+﻿using Microsoft.AspNetCore.Identity;
+using Portfolio.CustomExceptions;
 using Portfolio.Dto.RequestDto;
 using Portfolio.Dto.ResponseDto;
 using Portfolio.Interfaces.IRepository_s;
@@ -14,12 +15,14 @@ namespace Portfolio.Services
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IConfiguration _configuration;
         private readonly ITokenService _tokenService;
-        public AuthService(IApplicationUserRepository applicationUserRepository, ITokenService tokenService,IRefreshTokenRepository refreshTokenRepository, IConfiguration configuration)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public AuthService(IApplicationUserRepository applicationUserRepository, ITokenService tokenService,IRefreshTokenRepository refreshTokenRepository, IConfiguration configuration,UserManager<ApplicationUser> userManager)
         {
             _applicationUserRepository = applicationUserRepository;
             _tokenService = tokenService;
             _refreshTokenRepository = refreshTokenRepository;
             _configuration = configuration;
+            _userManager = userManager;
         }
         public Task<AuthResponseDto> GenerateRefreshTokenAsync(string refreshToken)
         {
@@ -61,12 +64,12 @@ namespace Portfolio.Services
             }
             ApplicationUser NewAppUser = new ApplicationUser
             {
-                //EmailId = applicationUserRequestDto.EmailID,
+                Email = applicationUserRequestDto.EmailID,
                 UserName = applicationUserRequestDto.UserName,
-                //HashedPassword = BCrypt.Net.BCrypt.HashPassword(applicationUserRequestDto.Password),
-                //Role = applicationUserRequestDto.Role
             };
-            await _applicationUserRepository.AddApplicationUserAsync(NewAppUser);
+            await _userManager.CreateAsync(NewAppUser, applicationUserRequestDto.Password);
+            await _userManager.AddToRoleAsync(NewAppUser, applicationUserRequestDto.Role.ToString());
+
         }
 
 
