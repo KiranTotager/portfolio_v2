@@ -1,50 +1,35 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using Portfolio.Enums;
+﻿using Portfolio.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection.Metadata.Ecma335;
 
 namespace Portfolio.Models
 {
     public class ProfileDetail
     {
-        [BsonId]
-        [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [BsonRequired]
-        [BsonElement("Full_Name")]
+        [Required(ErrorMessage ="Name is Required"),MaxLength(50,ErrorMessage = "Maximum length for Name is 50 only")]
         public string Name { get; set; }
-        [BsonElement("Current_Designation")]
-        [BsonRequired]
+        [Required(ErrorMessage ="Current Designation is Required"),MaxLength(50,ErrorMessage = "Maximum length for Current Designation is 50 only")]
         public string CurrentDesignation { get; set; }
-       
-        [BsonRequired]
-        [BsonElement("Work_Email")] 
+        [Required(ErrorMessage = "Current Email is Required"),MaxLength(100,ErrorMessage = "Maximum length for Email  is 50 only")]
         public string Email { get; set; }
-        [BsonRequired]
-        [BsonElement("Phone_Number")]
+        [Required(ErrorMessage = "Current PhoneNumber is Required"),MaxLength(50,ErrorMessage = "Maximum length for PhoneNumber  is 50 only")]
         public string PhoneNumber { get; set; }
-        [BsonRequired]
-        [BsonElement("Availability_To_Work_Status")]
+        [Required(ErrorMessage = "Current AvailabilityToWorkStatus is Required"),Column("Availability_To_WOrk_Status")]
         public AvailabilityToWorkStatus AvailabilityToWorkStatus { get; set; }
-        [BsonRequired]
-        [BsonElement("Profile_Pic_Url")]
-        public string ProfilePicUrl { get; set; }
-        [BsonElement("Resume_Url")]
-        [BsonRequired]
+        [Column("Profile_Url")]
+        public string? ProfilePicUrl { get; set; }
+        [Column("Resume_Url"),Required(ErrorMessage ="Resume url is required")]
         public string ResumeUrl { get; set; }
-        [BsonRequired]
-        [BsonElement("Short_Description")]
+        [Required(ErrorMessage ="Short description is required"),MaxLength(300,ErrorMessage = "Maximum length for Short_Description  is 300 only"),Column("Short_Description")]
         public string ShortDescription { get; set; }
-        [BsonRequired]
-        [BsonElement("long_Description")]
+        [Required(ErrorMessage = "Long description is required"),MaxLength(1000,ErrorMessage = "Maximum length for Long_Description  is 1000 only"),Column("Long_Description")]
         public string LongDescription { get; set; }
-        [BsonRequired]
-        [BsonElement("Address")]
+        [Required(ErrorMessage = "Address is required"),MaxLength(1000,ErrorMessage = "Maximum length for Address  is 50 only"),Column("Address")]
         public string Address { get; set; }
-       
-        [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
-        [BsonRequired]
-        [BsonElement("Profile_Updated_At")]
+        [Column("Updated_At")]
         public DateTime UpdatedAt { get; set; }
         
     }

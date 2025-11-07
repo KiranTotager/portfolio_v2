@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging.Abstractions;
 using Portfolio.Validators;
 
 namespace Portfolio.Filters
@@ -9,12 +10,27 @@ namespace Portfolio.Filters
     {
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            if (!context.ActionArguments.TryGetValue(fieldName, out var fileObj) || fileObj is not IFormFile file)
+            var dtoObj = context.ActionArguments.Values.FirstOrDefault();
+            if (dtoObj==null)
             {
-                context.Result = new BadRequestObjectResult($"File {fieldName} is missing or invalid ");
+                context.Result = new BadRequestObjectResult("invalid request data");
+                return;
+            }
+            var dtoType = dtoObj.GetType();
+            var propertyInfo=dtoType.GetProperty(fieldName);
+            if (propertyInfo == null)
+            {
+                context.Result = new BadRequestObjectResult($"{fieldName} file not found in dto");
+                return;
+            }
+            var file=propertyInfo.GetValue(dtoObj) as IFormFile;
+            if(file==null)
+            {
+                context.Result = new BadRequestObjectResult($"{fieldName} file not found ");
                 return;
             }
 
+           
             if (!FileValidator.isFileExensionAllowed(file, allowedExtensions))
             {
                 context.Result = new BadRequestObjectResult($"{fieldName} is invalid file");
