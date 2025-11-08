@@ -154,6 +154,7 @@ if (app.Environment.IsDevelopment())
         }
         );
 }
+app.Urls.Add("http://0.0.0.0:8080");
 app.UseHttpsRedirection();
 app.UseExceptionMiddleWare();
 app.UseAuthentication();
