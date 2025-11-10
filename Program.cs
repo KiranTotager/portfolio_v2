@@ -157,7 +157,7 @@ var app = builder.Build();
 //app.Urls.Add("http://0.0.0.0:8080");
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Urls.Add($"http://0.0.0.0:{port}");
-
+app.MapGet("/", () => Results.Ok("app running ok"));
 app.UseHttpsRedirection();
 app.UseExceptionMiddleWare();
 app.UseAuthentication();
