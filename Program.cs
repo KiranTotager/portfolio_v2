@@ -91,7 +91,7 @@ builder.Services.AddApiVersioning(options =>
 //builder.Services.AddSingleton<MongoDbContext>();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresSqlConnectionString")));
-builder.Services.AddIdentity<ApplicationUser,IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddAuthentication(
     options =>
@@ -130,7 +130,7 @@ builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
-builder.Services.AddScoped<ILandingPageRepository,LandingPageDetailRepository>();
+builder.Services.AddScoped<ILandingPageRepository, LandingPageDetailRepository>();
 builder.Services.AddScoped<ILandingPageDetailsService, LandingPageDetailService>();
 //builder.Services.us
 var app = builder.Build();
@@ -153,12 +153,13 @@ if (app.Environment.IsDevelopment())
             c.InjectJavascript("/SwaggerCustom/SwaggerCustom.js");
         }
         );
+    app.UseHttpsRedirection();
 }
 //app.Urls.Add("http://0.0.0.0:8080");
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Urls.Add($"http://0.0.0.0:{port}");
 
-app.UseHttpsRedirection();
+
 app.UseExceptionMiddleWare();
 app.UseAuthentication();
 app.UseStaticFiles();
