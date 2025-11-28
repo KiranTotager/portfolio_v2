@@ -1,4 +1,5 @@
-﻿using Portfolio.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Portfolio.Data;
 using Portfolio.Interfaces.IRepository_s;
 using Portfolio.Models;
 
@@ -33,9 +34,9 @@ namespace Portfolio.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<ContactMe>> GetAllContactMeAsync()
+        public async Task<IEnumerable<ContactMe>> GetAllContactMeAsync()
         {
-            throw new NotImplementedException();
+            return await _context.ContactMes.ToListAsync();
         }
 
         public Task<ContactMe> GetContactMeByIdAsync(long id)

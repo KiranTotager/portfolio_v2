@@ -13,7 +13,7 @@ namespace Portfolio.Controllers
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [ApiExplorerSettings(GroupName = "Client")]
+    
     public class ContactMeConroller : ControllerBase
     {
         private readonly IContactMeService contactMeService;
@@ -24,6 +24,7 @@ namespace Portfolio.Controllers
             this.mailService = mailService;
         }
 
+        [ApiExplorerSettings(GroupName = "Client")]
         [HttpPost("contact-me")]
         [SwaggerOperation("use this end call to add contact me reuests")]
         public async Task<ActionResult<CommonResponse<Object>>> AddContactRequestAsync([FromBody] ContactUsRequestDto contactUsRequestDto)
@@ -31,6 +32,14 @@ namespace Portfolio.Controllers
             await contactMeService.AddContactRequestAsync(contactUsRequestDto);
             await mailService.SendMailToAdminAsync(contactUsRequestDto);
             return Ok(new CommonResponse<Object>(StatusCodes.Status201Created, "contact us created successfully"));
+        }
+
+        [ApiExplorerSettings(GroupName = "CMS")]
+        [HttpGet("contact-me-requests")]
+        [SwaggerOperation("use this end call to get all contact me reuests")]
+        public async Task<ActionResult<List<ContactUsResponseDto>>> GetAllContactRequestsAsync()
+        {
+            return await contactMeService.GetAllContactRequestsAsync();
         }
     }
 }

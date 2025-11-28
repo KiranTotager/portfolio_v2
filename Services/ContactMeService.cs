@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Portfolio.Dto.RequestDto;
+using Portfolio.Dto.ResponseDto;
 using Portfolio.Interfaces.IRepository_s;
 using Portfolio.Interfaces.IServices;
 using Portfolio.Models;
@@ -19,6 +20,12 @@ namespace Portfolio.Services
         {
             ContactMe NewContact = _mapper.Map<ContactMe>(contactUsRequestDto);
             await _contactMeRepository.AddContactMeAsync(NewContact);
+        }
+
+        public async Task<List<ContactUsResponseDto>> GetAllContactRequestsAsync()
+        {
+            IEnumerable<ContactMe> contactMes = await _contactMeRepository.GetAllContactMeAsync();
+            return _mapper.Map<List<ContactUsResponseDto>>(contactMes);
         }
     }
 }

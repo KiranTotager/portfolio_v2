@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Portfolio.Dto.RequestDto;
+using Portfolio.Dto.ResponseDto;
 using Portfolio.Models;
 
 namespace Portfolio.Profiles
@@ -8,8 +9,8 @@ namespace Portfolio.Profiles
     {
         public ContactUsProfile()
         {
-            CreateMap<ContactMe, ContactUsRequestDto>();
             CreateMap<ContactUsRequestDto, ContactMe>();
+            CreateMap<ContactMe, ContactUsResponseDto>();
         }
     }
 }
